@@ -5,7 +5,7 @@ local M = {}
 
 -- setup function
 --- @type function
---- @param opts? {mappings?: false | {t?: table<string, string>, n?: table<string, string>}}
+--- @param opts? {mappings?: false  | {t?: table<string, string>, n?: table<string, string>} }
 --- @return nil
 M.setup = function(opts)
   commands._intiCommands()

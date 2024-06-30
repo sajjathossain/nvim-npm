@@ -17,18 +17,20 @@ M._keymaps = {
 }
 
 --- Init keymaps
---- @param opts { mappings?: false | { t?: table<string, string>, n?: table<string, string> } }
+--- @param opts { mappings?: false | { t?: table<string, string>, n?: table<string, string>  }  }
 --- @return nil
 M._initKeymaps = function(opts)
-  if opts then
-    if not opts.mappings then
-      M._setDeafultKeymaps()
-    end
-
-    if opts.mappings then
-      M._setupMappings(opts.mappings)
-    end
+  if not opts or opts.mappings ~= false or (opts.mappings and #opts.mappings == 0) then
+    print("default keymaps")
+    return M._setDeafultKeymaps()
   end
+
+  if opts.mappings == false then
+    print("mappings disabled")
+    return
+  end
+
+  return M._setupMappings(opts.mappings)
 end
 
 
