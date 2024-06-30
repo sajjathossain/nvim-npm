@@ -1,6 +1,7 @@
 local M = {}
 local status_ok_telescope, telescope = pcall(require, 'telescope')
 local status_ok_fterm, fterm = pcall(require, 'FTerm')
+local status_ok_notify, notify = pcall(require, 'notify')
 if not status_ok_telescope or not status_ok_fterm then return end
 telescope.setup {}
 
@@ -84,6 +85,10 @@ end
 M._showScriptsInTelescope = function()
   if vim.tbl_isempty(utils._packageJsonCache) then
     utils._refreshPackageJsonCache()
+  end
+
+  if vim.tbl_isempty(utils._packageJsonCache) then
+    return notify("No scripts found in the project", "error", { title = "nvim-npm" })
   end
 
   local results = {}
