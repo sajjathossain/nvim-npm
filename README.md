@@ -21,12 +21,18 @@ Install the plugin with your favorite package manager:
 
 ```vim
 Plug 'sajjahossain/nvim-npm'
+Plug 'numToStr/FTerm.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'rcarriga/nvim-notify'
 ```
 
 - [packer.nvim](https://github.com/wbthomason/packer.nvim)
 
 ```lua
 use 'sajjahossain/nvim-npm'
+use 'numToStr/FTerm.nvim'
+use 'nvim-telescope/telescope.nvim'
+use 'rcarriga/nvim-notify'
 ```
 
 - [lazy.nvim](https://github.com/folke/lazy.nvim)
@@ -38,7 +44,8 @@ require('lazy').setup({
     config = true,
     dependencies = {
       'nvim-telescope/telescope.nvim',
-      "numToStr/FTerm.nvim",
+      'numToStr/FTerm.nvim',
+      'rcarriga/nvim-notify',
     }
   }
 })
