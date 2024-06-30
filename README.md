@@ -4,6 +4,7 @@
 
 <p align="center">
   <a href="##features">Features</a> •
+  <a href="##screenshots">Screenshots</a> •
   <a href="##installation">Installation</a> •
   <a href="##commands">Commands</a> •
   <a href="##mappings">Mappings</a> •
@@ -12,6 +13,16 @@
 
 ## Features
  Execute npm scripts without leaving the editor 
+
+## Screenshots
+- Search scripts in the project
+<img src="./assets/sc-search-scripts-in-the-project.png" width="500">
+
+- Show scripts in a telescope window
+<img src="./assets/sc-search-scripts-in-the-project.png" width="500">
+
+- execute script
+<img src="./assets/sc-execute-command.png" width="500">
 
 ## Installation
 
