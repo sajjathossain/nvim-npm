@@ -4,11 +4,27 @@ M._api = M._vim.api
 M._fn = M._vim.fn
 M._json = M._vim.fn.json_decode
 M._packageJsonCache = {}
+M._packageManagerCommand = "npm run"
 --[[ local status_ok_lfs, lfs = pcall(require, "lfs")
 
 if not status_ok_lfs then return {} end ]]
 
 M._print = print
+
+M._setPackageManager = function(root)
+  local commands = {
+    ["pnpm run"] = M._fn.filereadable(root .. "/pnpm-lock.yaml") == 1,
+    ["yarn"] = M._fn.filereadable(root .. "/yarn.lock") == 1,
+    ["npm run"] = M._fn.filereadable(root .. "/package-lock.json") == 1,
+  }
+
+  for key, command in pairs(commands) do
+    if command then
+      M._packageManagerCommand = key
+      return
+    end
+  end
+end
 
 M._refreshPackageJsonCache = function()
   local root = M._findGitRoot()
@@ -16,6 +32,8 @@ M._refreshPackageJsonCache = function()
     M._api.nvim_err_writeln("No .git folder found, unable to determine project root")
     return nil
   end
+
+  M._setPackageManager(root)
 
   local package_json_paths = M._getAllPackageJsonPaths(root)
   M._packageJsonCache = {}
@@ -26,6 +44,7 @@ M._refreshPackageJsonCache = function()
     M._packageJsonCache[dir_name] = path
   end
 end
+
 
 M._findGitRoot = function()
   local path = M._fn.expand('%:p:h')
