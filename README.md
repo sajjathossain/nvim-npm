@@ -15,14 +15,14 @@
  Execute npm scripts without leaving the editor 
 
 ## Screenshots
-- Search scripts in the project
-<img src="./assets/sc-search-scripts-in-the-project.png" width="500">
+- Search projects that contain a package.json file
+<img src="./assets/sc-search-projects.png" width="100%" alt="search projects" align="center">
 
 - Show scripts in a telescope window
-<img src="./assets/sc-search-scripts-in-the-project.png" width="500">
+<img src="./assets/sc-search-scripts-in-the-project.png" width="100%" alt="search scripts in the project" align="center">
 
 - execute script
-<img src="./assets/sc-execute-command.png" width="500">
+<img src="./assets/sc-execute-command.png" width="100%" alt="execute command" align="center">
 
 ## Installation
 
