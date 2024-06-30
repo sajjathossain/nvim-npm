@@ -2,7 +2,7 @@ local M = {}
 local status_ok_telescope, telescope = pcall(require, 'telescope')
 local status_ok_fterm, fterm = pcall(require, 'FTerm')
 local status_ok_notify, notify = pcall(require, 'notify')
-if not status_ok_telescope or not status_ok_fterm then return end
+if not status_ok_telescope or not status_ok_fterm or not status_ok_notify then return end
 telescope.setup {}
 
 local utils = require('nvim-npm.utils')
