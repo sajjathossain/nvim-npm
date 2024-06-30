@@ -21,12 +21,10 @@ M._keymaps = {
 --- @return nil
 M._initKeymaps = function(opts)
   if not opts or opts.mappings ~= false or (opts.mappings and #opts.mappings == 0) then
-    print("default keymaps")
     return M._setDeafultKeymaps()
   end
 
   if opts.mappings == false then
-    print("mappings disabled")
     return
   end
 
