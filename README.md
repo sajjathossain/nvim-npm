@@ -3,10 +3,11 @@
 <p align="center">A Neovim plugin for JavaScript, TypeScript projects.</p>
 
 <p align="center">
-  <a href="#features">Features</a> •
-  <a href="#installation">Installation</a> •
-  <a href="#usage">Usage</a> •
-  <a href="#configuration">Configuration</a> •
+  <a href="##features">Features</a> •
+  <a href="##installation">Installation</a> •
+  <a href="##commands">Commands</a> •
+  <a href="##mappings">Mappings</a> •
+  <a href="##configuration">Configuration</a> •
 </p>
 
 ## Features
@@ -48,7 +49,7 @@ require('lazy').setup({
 | Command | Description |
 | --- | --- |
 | `:ShowScriptsInTelescope` | Shows the available scripts in a telescope window |
-| `:RefreshPackageJsonCache` | Shows the available scripts in a telescope window |
+| `:RefreshPackageJsonCache` | Refreshes the package.json cache |
 
 ### Mappings
 
