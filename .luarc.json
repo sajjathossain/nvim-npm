@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json",
+  "Lua.diagnostics.globals": ["vim", "version", "NVIM_SET_KEYMAPS", "NVIM_CMD", "NVIM_ALERT", "NVIM_SET_OPTIONS", "NVIM_SET_WHICHKEY_MAPPING" ],
+  "workspace.library": [
+    "/usr/share/nvim/runtime/lua",
+    "${3rd}/luv/library"
+  ],
+  "format.enable": true,
+  "workspace.checkThirdParty": false,
+  "Lua": {
+    "runtime.version": "LuaJIT",
+    "workspace.checkThirdParty": false
+  }
+}
