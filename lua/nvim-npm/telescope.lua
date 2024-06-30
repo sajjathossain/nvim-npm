@@ -53,11 +53,28 @@ M._showScriptsInPackageJson = function(package_json_path)
           local dir = utils._fn.fnamemodify(path, ":h")
           local script = utils._packageManagerCommand .. " " .. script_command
 
-          local name = " name=" .. dir:gsub('/', '-'):gsub("^%-", "") .. "::" .. script_command
+          local str = dir:gsub('/', '-'):gsub("^%-", "") .. "::" .. script_command
+          local name = " name=" .. str
           local command = " cmd=" .. "\"" .. script .. "\""
           local directory = " dir=" .. dir
 
-          vim.cmd("TermExec" .. name .. directory .. " size=25" .. " direction=float" .. command)
+          local exeCommand = nil
+          for _, value in ipairs(utils._terminalIndex) do
+            local objDir = value[1]
+            local objCommand = value[2]
+            if objDir == str then
+              exeCommand = objCommand
+              break
+            end
+          end
+
+          if exeCommand == nil then
+            local newKey = tostring(#utils._terminalIndex + 1) .. "TermExec"
+            table.insert(utils._terminalIndex, { str, newKey })
+            exeCommand = newKey
+          end
+
+          vim.cmd(exeCommand .. name .. directory .. " size=25" .. " direction=float" .. command)
         else
           utils._api.nvim_err_writeln("No command found for script: " .. script_name)
         end
