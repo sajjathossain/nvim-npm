@@ -53,7 +53,14 @@ M._showScriptsInPackageJson = function(package_json_path)
           local dir = utils._fn.fnamemodify(path, ":h")
           local script = utils._packageManagerCommand .. " " .. script_command
 
-          local str = dir:gsub('/', '-'):gsub("^%-", "") .. "::" .. script_command
+          local parts = {}
+          for part in dir:gmatch("[^/]+") do
+            parts[#parts + 1] = part
+          end
+
+          local lastPart = parts[#parts]
+
+          local str = lastPart .. "::" .. script_command
           local name = " name=" .. str
           local command = " cmd=" .. "\"" .. script .. "\""
           local directory = " dir=" .. dir
