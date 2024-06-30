@@ -1,6 +1,6 @@
 <h1 align="center">Nvim NPM</h1>
 
-<p align="center">A Neovim plugin for JavaScript, TypeScript projects.</p>
+<p align="center">A Neovim plugin for JavaScript, TypeScript projects. It provides a way to execute npm scripts without leaving the editor.</p>
 
 <p align="center">
   <a href="##features">Features</a> •
