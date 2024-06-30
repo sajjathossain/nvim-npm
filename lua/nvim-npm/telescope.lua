@@ -54,7 +54,7 @@ M._showScriptsInPackageJson = function(package_json_path)
         if script_command then
           local dir = utils._fn.fnamemodify(path, ":h")
           local cd = "cd " .. dir
-          local script = "npm run " .. script_command
+          local script = utils._packageManagerCommand .. " " .. script_command
           local cmd = cd .. " && " .. script
 
           --[[ local ft = "fterm_" .. script_command
