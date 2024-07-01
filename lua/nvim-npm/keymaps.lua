@@ -12,6 +12,7 @@ M._keymaps = {
   },
   n = {
     [";pl"] = "<cmd>ShowScriptsInTelescope<cr>",
+    [";po"] = "<cmd>OpenTerminal<cr>",
     [";pr"] = "<cmd>RefreshPackageJsonCache<cr>",
   }
 }
