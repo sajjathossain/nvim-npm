@@ -1,7 +1,7 @@
 local M = {}
 local status_ok_telescope, telescope = pcall(require, 'telescope')
 local status_ok_notify, notify = pcall(require, 'notify')
--- local status_ok_term, terminal = pcall(require, 'toggleterm.terminal')
+local status_ok_term, terminal = pcall(require, 'toggleterm.terminal')
 if not status_ok_telescope or not status_ok_notify then return end
 telescope.setup {}
 
@@ -149,7 +149,7 @@ M._selectTerminal = function(params)
 
   local results = {}
   for _, term in ipairs(terminals) do
-    table.insert(results, { term.display_name, term.id })
+    table.insert(results, { term.display_name, term.id, term.bufnr })
   end
 
   table.sort(results, function(a, b) return string.upper(a[1]) < string.upper(b[1]) end)
@@ -204,8 +204,11 @@ M._exitTerminal = function()
       actions.close(prompt_bufnr)
       local term_name = selection.value[1]
       local term_id = selection.value[2]
+      local term_bufnr = selection.value[3]
       if term_id then
-        vim.cmd(term_id .. "TermExec")
+        if vim.api.nvim_buf_is_loaded(term_bufnr) then
+          vim.api.nvim_buf_delete(term_bufnr, { force = true })
+        end
       else
         utils._api.nvim_err_writeln("No command found for terminal: " .. term_name)
       end
@@ -223,8 +226,10 @@ M._exitAllTerminals = function()
   local terminals = utils._getAllTerminals()
   if not terminals then return notify("No terminals found", "error", { title = "nvim-npm" }) end
   for _, term in ipairs(terminals) do
-    vim.cmd("ToggleTerm " .. term.id)
-    vim.cmd(term.id .. "TermExec" .. " cmd=exit")
+    local term_bufnr = term.bufnr
+    if vim.api.nvim_buf_is_loaded(term_bufnr) then
+      vim.api.nvim_buf_delete(term_bufnr, { force = true })
+    end
   end
 end
 
