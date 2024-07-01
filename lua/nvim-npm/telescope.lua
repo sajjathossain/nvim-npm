@@ -1,7 +1,6 @@
 local M = {}
 local status_ok_telescope, telescope = pcall(require, 'telescope')
 local status_ok_notify, notify = pcall(require, 'notify')
-local status_ok_term, terminal = pcall(require, 'toggleterm.terminal')
 if not status_ok_telescope or not status_ok_notify then return end
 telescope.setup {}
 
@@ -63,25 +62,28 @@ M._showScriptsInPackageJson = function(package_json_path)
           local command = " cmd=" .. "\"" .. script .. "\""
 
           local exeCommand = nil
-          for _, value in ipairs(utils._terminalIndex) do
-            local objDir = value[1]
-            local objCommand = value[2]
-            if objDir == str then
-              exeCommand = objCommand
-              break
-            end
-          end
+          local terminals = utils._getAllTerminals()
+          if terminals == nil then exeCommand = "1TermExec" end
 
-          if exeCommand == nil then
-            local newKey = tostring(#utils._terminalIndex + 1) .. "TermExec"
-            table.insert(utils._terminalIndex, { str, newKey })
-            exeCommand = newKey
+          if terminals then
+            for _, term in ipairs(terminals) do
+              if term.display_name == str then
+                exeCommand = tostring(term.id) .. "TermExec"
+                break
+              end
+            end
+
+            if exeCommand == nil then
+              table.sort(terminals, function(a, b) return string.upper(a.id) < string.upper(b.id) end)
+              local last = terminals[#terminals]
+              local newKey = tostring(last.id + 1) .. "TermExec"
+              exeCommand = newKey
+            end
           end
 
           local wholeCommand = exeCommand .. name .. " size=25" .. " direction=float" .. command
 
           vim.cmd(wholeCommand)
-          vim.cmd("startinsert")
         else
           utils._api.nvim_err_writeln("No command found for script: " .. script_name)
         end
