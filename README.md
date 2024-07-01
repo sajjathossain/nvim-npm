@@ -7,7 +7,7 @@
   <a href="##screenshots">Screenshots</a> •
   <a href="##installation">Installation</a> •
   <a href="##commands">Commands</a> •
-  <a href="##api">Api</a> 
+  <a href="##api">Api</a> •
   <a href="##default-mappings">Default Mappings</a> •
   <a href="##configuration">Configuration</a> •
 </p>
@@ -63,7 +63,7 @@ require('lazy').setup({
 })
 ```
 
-### Commands
+## Commands
 
 | Command | Description |
 | --- | --- |
@@ -71,7 +71,7 @@ require('lazy').setup({
 | `:RefreshPackageJsonCache` | Refreshes the package.json cache |
 | `:OpenTerminal` | Opens one of the available terminals |
 
-### Api
+## Api
 
 | Function | Description |
 | --- | --- |
@@ -81,7 +81,7 @@ require('lazy').setup({
 | `require('nvim-npm').exitAllTerminal()` | Closes all the terminals |
 
 
-### Default Mappings
+## Default Mappings
 
 | Mode | Key | Action |
 | --- | --- | --- |
