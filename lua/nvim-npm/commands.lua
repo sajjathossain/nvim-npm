@@ -8,6 +8,9 @@ M._intiCommands = function()
   utils._api.nvim_create_user_command('PrintScripts', utils._printScriptsPaths, {})
   utils._api.nvim_create_user_command('ShowScriptsInTelescope', telescope._showProjectsWithScriptsInTelescope, {})
   utils._api.nvim_create_user_command('RefreshPackageJsonCache', utils._refreshPackageJsonCache, {})
+  utils._api.nvim_create_user_command('OpenTerminal', telescope._openTerminal, {})
+  utils._api.nvim_create_user_command('ExitTerminalSession', telescope._exitTerminal, {})
+  utils._api.nvim_create_user_command('ExitAllTerminalSession', telescope._exitAllTerminals, {})
 end
 
 return M
