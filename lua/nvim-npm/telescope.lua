@@ -49,7 +49,7 @@ M._showScriptsInPackageJson = function(package_json_path)
         local path = selection.value[3]
         if script_command then
           local dir = utils._fn.fnamemodify(path, ":h")
-          local script = utils._packageManagerCommand .. " " .. script_command
+          local script = utils._packageManagerCommand .. " --prefix " .. dir .. " " .. script_command
 
           local parts = {}
           for part in dir:gmatch("[^/]+") do
@@ -61,7 +61,6 @@ M._showScriptsInPackageJson = function(package_json_path)
           local str = lastPart .. "::" .. script_command
           local name = " name=" .. str
           local command = " cmd=" .. "\"" .. script .. "\""
-          local directory = " dir=" .. dir
 
           local exeCommand = nil
           for _, value in ipairs(utils._terminalIndex) do
@@ -79,7 +78,7 @@ M._showScriptsInPackageJson = function(package_json_path)
             exeCommand = newKey
           end
 
-          local wholeCommand = exeCommand .. name .. directory .. " size=25" .. " direction=float" .. command
+          local wholeCommand = exeCommand .. name .. " size=25" .. " direction=float" .. command
 
           vim.cmd(wholeCommand)
           vim.cmd("startinsert")
