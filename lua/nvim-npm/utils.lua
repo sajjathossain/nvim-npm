@@ -4,7 +4,6 @@ M._api = M._vim.api
 M._fn = M._vim.fn
 M._json = M._vim.fn.json_decode
 M._packageJsonCache = {}
-M._terminalIndex = {}
 M._packageManagerCommand = "npm run"
 --[[ local status_ok_lfs, lfs = pcall(require, "lfs")
 
