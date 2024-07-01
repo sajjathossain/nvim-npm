@@ -7,7 +7,8 @@
   <a href="##screenshots">Screenshots</a> •
   <a href="##installation">Installation</a> •
   <a href="##commands">Commands</a> •
-  <a href="##mappings">Mappings</a> •
+  <a href="##api">Api</a> 
+  <a href="##default-mappings">Default Mappings</a> •
   <a href="##configuration">Configuration</a> •
 </p>
 
@@ -68,12 +69,24 @@ require('lazy').setup({
 | --- | --- |
 | `:ShowScriptsInTelescope` | Shows the available scripts in a telescope window |
 | `:RefreshPackageJsonCache` | Refreshes the package.json cache |
+| `:OpenTerminal` | Opens one of the available terminals |
 
-### Mappings
+### Api
+
+| Function | Description |
+| --- | --- |
+| `require('nvim-npm').openTerminal()` | Opens one of the available terminals |
+| `require('nvim-npm').showScripts()` | Shows the available scripts in a telescope window |
+| `require('nvim-npm').exitTerminal()` | Closes the current terminal |
+| `require('nvim-npm').exitAllTerminal()` | Closes all the terminals |
+
+
+### Default Mappings
 
 | Mode | Key | Action |
 | --- | --- | --- |
 | Normal | `;pl` | Lists the available scripts |
+| Normal | `;po` | Opens one of the available terminals |
 | Normal | `;pr` | Refreshes the package.json cache |
 
 ## Configuration
