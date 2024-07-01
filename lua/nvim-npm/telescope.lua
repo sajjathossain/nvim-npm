@@ -20,14 +20,11 @@ M._showScriptsInPackageJson = function(package_json_path)
 
   local results = {}
 
-  --[[ for script_name, script_command in pairs(scripts) do
-    table.insert(results, { " " .. script_name .. "  " .. script_command, script_command, package_json_path })
-  end ]]
-
-
   for script_name, _ in pairs(scripts) do
     table.insert(results, { " " .. script_name, script_name, package_json_path })
   end
+
+  table.sort(results, function(a, b) return string.upper(a[2]) < string.upper(b[2]) end)
 
   pickers.new({}, {
     prompt_title = "Scripts in " .. package_json_path,
@@ -108,6 +105,9 @@ M._showProjectsWithScriptsInTelescope = function()
   if #results == 1 then
     return M._showScriptsInPackageJson(results[1][2])
   end
+
+  table.sort(results, function(a, b) return string.upper(a[1]) < string.upper(b[1]) end)
+
   pickers.new({}, {
     prompt_title = "Package.json Script Paths",
     finder = finders.new_table {
