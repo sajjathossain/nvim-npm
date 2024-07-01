@@ -1,6 +1,7 @@
 local M = {}
 local status_ok_telescope, telescope = pcall(require, 'telescope')
 local status_ok_notify, notify = pcall(require, 'notify')
+-- local status_ok_term, terminal = pcall(require, 'toggleterm.terminal')
 if not status_ok_telescope or not status_ok_notify then return end
 telescope.setup {}
 
@@ -78,7 +79,10 @@ M._showScriptsInPackageJson = function(package_json_path)
             exeCommand = newKey
           end
 
-          vim.cmd(exeCommand .. name .. directory .. " size=25" .. " direction=float" .. command)
+          local wholeCommand = exeCommand .. name .. directory .. " size=25" .. " direction=float" .. command
+
+          vim.cmd(wholeCommand)
+          vim.cmd("startinsert")
         else
           utils._api.nvim_err_writeln("No command found for script: " .. script_name)
         end
@@ -88,6 +92,9 @@ M._showScriptsInPackageJson = function(package_json_path)
   }):find()
 end
 
+--- show projects with scripts in telescope
+--- @type function
+--- @return nil
 M._showProjectsWithScriptsInTelescope = function()
   if vim.tbl_isempty(utils._packageJsonCache) then
     utils._refreshPackageJsonCache()
@@ -130,6 +137,96 @@ M._showProjectsWithScriptsInTelescope = function()
       return true
     end,
   }):find()
+end
+
+--- Select a terminal
+--- @param params {attach_mappings: function}
+--- @return nil
+M._selectTerminal = function(params)
+  local terminals = utils._getAllTerminals()
+  if not terminals then return notify("No terminals found", "error", { title = "nvim-npm" }) end
+
+  print(vim.inspect(terminals))
+
+  local results = {}
+  for _, term in ipairs(terminals) do
+    table.insert(results, { term.display_name, term.id })
+  end
+
+  table.sort(results, function(a, b) return string.upper(a[1]) < string.upper(b[1]) end)
+
+  pickers.new({}, {
+    prompt_title = "Terminals",
+    finder = finders.new_table {
+      results = results,
+      entry_maker = function(entry)
+        return {
+          value = entry,
+          display = entry[1],
+          ordinal = entry[1],
+        }
+      end,
+    },
+    sorter = sorters.get_generic_fuzzy_sorter(),
+    attach_mappings = params.attach_mappings,
+  }):find()
+end
+
+--- Open a terminal
+--- @type function
+--- @return nil
+M._openTerminal = function()
+  local attach_mappings = function(prompt_bufnr, _)
+    actions.select_default:replace(function()
+      local selection = action_state.get_selected_entry()
+      actions.close(prompt_bufnr)
+      local term_name = selection.value[1]
+      local term_id = selection.value[2]
+      if term_id then
+        vim.cmd("ToggleTerm " .. term_id)
+      else
+        utils._api.nvim_err_writeln("No command found for terminal: " .. term_name)
+      end
+    end)
+    return true
+  end
+
+  M._selectTerminal({ attach_mappings = attach_mappings })
+end
+
+
+--- Exit a terminal
+--- @type function
+--- @return nil
+M._exitTerminal = function()
+  local attach_mappings = function(prompt_bufnr, _)
+    actions.select_default:replace(function()
+      local selection = action_state.get_selected_entry()
+      actions.close(prompt_bufnr)
+      local term_name = selection.value[1]
+      local term_id = selection.value[2]
+      if term_id then
+        vim.cmd(term_id .. "TermExec")
+      else
+        utils._api.nvim_err_writeln("No command found for terminal: " .. term_name)
+      end
+    end)
+    return true
+  end
+
+  M._selectTerminal({ attach_mappings = attach_mappings })
+end
+
+--- Exit all terminals
+--- @type function
+--- @return nil
+M._exitAllTerminals = function()
+  local terminals = utils._getAllTerminals()
+  if not terminals then return notify("No terminals found", "error", { title = "nvim-npm" }) end
+  for _, term in ipairs(terminals) do
+    vim.cmd("ToggleTerm " .. term.id)
+    vim.cmd(term.id .. "TermExec" .. " cmd=exit")
+  end
 end
 
 return M
