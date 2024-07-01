@@ -91,7 +91,7 @@ M._showScriptsInPackageJson = function(package_json_path)
   }):find()
 end
 
-M._showScriptsInTelescope = function()
+M._showProjectsWithScriptsInTelescope = function()
   if vim.tbl_isempty(utils._packageJsonCache) then
     utils._refreshPackageJsonCache()
   end
