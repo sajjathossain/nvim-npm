@@ -109,6 +109,17 @@ M._getPackageJsonScriptsPaths = function()
   return M._packageJsonCache
 end
 
+M._getAllTerminals = function()
+  local status_ok_term, terminal = pcall(require, 'toggleterm.terminal')
+  if not status_ok_term then return nil end
+  local terminals = terminal.get_all()
+  if vim.tbl_isempty(terminals) then
+    return nil
+  end
+
+  return terminals
+end
+
 --- @type function
 M._printScriptsPaths = function()
   local scripts_paths = M._getPackageJsonScriptsPaths()
