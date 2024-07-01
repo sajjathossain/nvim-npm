@@ -105,6 +105,9 @@ M._showProjectsWithScriptsInTelescope = function()
     table.insert(results, { dir_name, path })
   end
 
+  if #results == 1 then
+    return M._showScriptsInPackageJson(results[1][2])
+  end
   pickers.new({}, {
     prompt_title = "Package.json Script Paths",
     finder = finders.new_table {
