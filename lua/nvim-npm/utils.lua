@@ -4,7 +4,7 @@ M._api = M._vim.api
 M._fn = M._vim.fn
 M._json = M._vim.fn.json_decode
 M._packageJsonCache = {}
-M._packageManagerCommand = "npm run"
+M._packageManagerCommand = "npm"
 --[[ local status_ok_lfs, lfs = pcall(require, "lfs")
 
 if not status_ok_lfs then return {} end ]]
@@ -13,9 +13,9 @@ M._print = print
 
 M._setPackageManager = function(root)
   local commands = {
-    ["pnpm run"] = M._fn.filereadable(root .. "/pnpm-lock.yaml") == 1,
+    ["pnpm"] = M._fn.filereadable(root .. "/pnpm-lock.yaml") == 1,
     ["yarn"] = M._fn.filereadable(root .. "/yarn.lock") == 1,
-    ["npm run"] = M._fn.filereadable(root .. "/package-lock.json") == 1,
+    ["npm"] = M._fn.filereadable(root .. "/package-lock.json") == 1,
   }
 
   for key, command in pairs(commands) do
