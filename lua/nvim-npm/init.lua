@@ -4,10 +4,11 @@ local telescope = require('nvim-npm.telescope')
 
 local M = {}
 
-M.showScripts = telescope._showProjectsWithScriptsInTelescope
-M.openTerminal = telescope._openTerminal
-M.exitTerminal = telescope._exitTerminal
 M.exitAllTerminal = telescope._exitAllTerminals
+M.exitTerminal = telescope._exitTerminal
+M.InstallPackage = telescope._installPackage
+M.openTerminal = telescope._openTerminal
+M.showScripts = telescope._showProjectsWithScriptsInTelescope
 
 -- setup function
 --- @type function

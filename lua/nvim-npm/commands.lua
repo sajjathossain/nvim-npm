@@ -11,6 +11,7 @@ M._intiCommands = function()
   utils._api.nvim_create_user_command('OpenTerminal', telescope._openTerminal, {})
   utils._api.nvim_create_user_command('ExitTerminalSession', telescope._exitTerminal, {})
   utils._api.nvim_create_user_command('ExitAllTerminalSession', telescope._exitAllTerminals, {})
+  utils._api.nvim_create_user_command('InstallPackage', telescope._installPackage, {})
 end
 
 return M
