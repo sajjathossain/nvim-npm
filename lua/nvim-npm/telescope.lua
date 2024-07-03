@@ -11,6 +11,63 @@ local sorters = require('telescope.sorters')
 local actions = require('telescope.actions')
 local action_state = require('telescope.actions.state')
 
+--- Execute a command
+--- @param params {script_name: string|nil, script_command: string|nil, path: string|nil, execute_command?: boolean}
+--- @return nil
+M._executeCommand = function(params)
+  local script_name = params.script_name
+  local script_command = params.script_command
+  local path = params.path
+
+  if not params.script_command then script_command = "" end
+
+  if script_command then
+    local dir = utils._fn.fnamemodify(path, ":h")
+    local script = utils._packageManagerCommand .. " run" .. " --prefix " .. dir .. " " .. script_command
+
+    local parts = {}
+    for part in dir:gmatch("[^/]+") do
+      parts[#parts + 1] = part
+    end
+
+    local lastPart = parts[#parts]
+
+    local str = lastPart .. "::" .. script_command
+    local name = " name=" .. str
+    local command = " cmd=" .. "\"" .. script .. "\""
+
+    local exeCommand = nil
+    local terminals = utils._getAllTerminals()
+    if terminals == nil then exeCommand = "1TermExec" end
+
+    if terminals then
+      for _, term in ipairs(terminals) do
+        if term.display_name == str then
+          exeCommand = tostring(term.id) .. "TermExec"
+          break
+        end
+      end
+
+      if exeCommand == nil then
+        table.sort(terminals, function(a, b) return string.upper(a.id) < string.upper(b.id) end)
+        local last = terminals[#terminals]
+        local newKey = tostring(last.id + 1) .. "TermExec"
+        exeCommand = newKey
+      end
+    end
+
+    if params.execute_command then
+      command = " cmd=" .. "\"" .. utils._packageManagerCommand .. " " .. script_command .. "\""
+    end
+
+    local wholeCommand = exeCommand .. name .. " size=25" .. " direction=float" .. command
+
+    vim.cmd(wholeCommand)
+  else
+    utils._api.nvim_err_writeln("No command found for script: " .. script_name)
+  end
+end
+
 M._showScriptsInPackageJson = function(package_json_path)
   local package_json_content = utils._readFile(package_json_path)
   if not package_json_content then return end
@@ -46,57 +103,16 @@ M._showScriptsInPackageJson = function(package_json_path)
         local script_name = selection.value[1]
         local script_command = selection.value[2]
         local path = selection.value[3]
-        if script_command then
-          local dir = utils._fn.fnamemodify(path, ":h")
-          local script = utils._packageManagerCommand .. " --prefix " .. dir .. " " .. script_command
-
-          local parts = {}
-          for part in dir:gmatch("[^/]+") do
-            parts[#parts + 1] = part
-          end
-
-          local lastPart = parts[#parts]
-
-          local str = lastPart .. "::" .. script_command
-          local name = " name=" .. str
-          local command = " cmd=" .. "\"" .. script .. "\""
-
-          local exeCommand = nil
-          local terminals = utils._getAllTerminals()
-          if terminals == nil then exeCommand = "1TermExec" end
-
-          if terminals then
-            for _, term in ipairs(terminals) do
-              if term.display_name == str then
-                exeCommand = tostring(term.id) .. "TermExec"
-                break
-              end
-            end
-
-            if exeCommand == nil then
-              table.sort(terminals, function(a, b) return string.upper(a.id) < string.upper(b.id) end)
-              local last = terminals[#terminals]
-              local newKey = tostring(last.id + 1) .. "TermExec"
-              exeCommand = newKey
-            end
-          end
-
-          local wholeCommand = exeCommand .. name .. " size=25" .. " direction=float" .. command
-
-          vim.cmd(wholeCommand)
-        else
-          utils._api.nvim_err_writeln("No command found for script: " .. script_name)
-        end
+        M._executeCommand({ script_name = script_name, script_command = script_command, path = path })
       end)
       return true
-    end,
+    end
   }):find()
 end
 
---- show projects with scripts in telescope
---- @type function
---- @return nil
-M._showProjectsWithScriptsInTelescope = function()
+--- show projects
+--- @param params {attach_mappings: function, execute_command?: boolean}
+M._showProjects = function(params)
   if vim.tbl_isempty(utils._packageJsonCache) then
     utils._refreshPackageJsonCache()
   end
@@ -110,7 +126,7 @@ M._showProjectsWithScriptsInTelescope = function()
     table.insert(results, { dir_name, path })
   end
 
-  if #results == 1 then
+  if #results == 1 and not params.execute_command then
     return M._showScriptsInPackageJson(results[1][2])
   end
 
@@ -129,15 +145,24 @@ M._showProjectsWithScriptsInTelescope = function()
       end,
     },
     sorter = sorters.get_generic_fuzzy_sorter(),
-    attach_mappings = function(prompt_bufnr, _)
-      actions.select_default:replace(function()
-        local selection = action_state.get_selected_entry()
-        actions.close(prompt_bufnr)
-        M._showScriptsInPackageJson(selection.value[2])
-      end)
-      return true
-    end,
+    attach_mappings = params.attach_mappings,
   }):find()
+end
+
+--- show projects with scripts in telescope
+--- @type function
+--- @return nil
+M._showProjectsWithScriptsInTelescope = function()
+  local attach_mappings = function(prompt_bufnr, _)
+    actions.select_default:replace(function()
+      local selection = action_state.get_selected_entry()
+      actions.close(prompt_bufnr)
+      M._showScriptsInPackageJson(selection.value[2])
+    end)
+    return true
+  end
+
+  M._showProjects({ attach_mappings = attach_mappings })
 end
 
 --- Select a terminal
