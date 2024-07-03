@@ -260,4 +260,21 @@ M._exitAllTerminals = function()
   end
 end
 
+M._installPackage = function()
+  local attach_mappings = function(prompt_bufnr, _)
+    actions.select_default:replace(function()
+      local selection = action_state.get_selected_entry()
+      actions.close(prompt_bufnr)
+      local script_name = selection.value[1]
+      local script_command = "install"
+      local path = selection.value[3]
+      vim.fn.input("Enter package name: ")
+      M._executeCommand({ script_name = script_name, script_command = script_command, path = path, execute_command = true })
+    end)
+    return true
+  end
+
+  M._showProjects({ attach_mappings = attach_mappings, execute_command = true })
+end
+
 return M
