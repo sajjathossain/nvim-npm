@@ -10,6 +10,7 @@
   <a href="##api">Api</a> •
   <a href="##default-mappings">Default Mappings</a> •
   <a href="##configuration">Configuration</a> •
+  <a href="##configuration-options">Configuration options</a> •
 </p>
 
 ## Features
@@ -33,7 +34,7 @@ Install the plugin with your favorite package manager:
 
 ```vim
 Plug 'sajjahossain/nvim-npm'
-Plug 'numToStr/FTerm.nvim'
+Plug 'akinsho/toggleterm.nvim',
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'rcarriga/nvim-notify'
 ```
@@ -42,7 +43,7 @@ Plug 'rcarriga/nvim-notify'
 
 ```lua
 use 'sajjahossain/nvim-npm'
-use 'numToStr/FTerm.nvim'
+use 'akinsho/toggleterm.nvim',
 use 'nvim-telescope/telescope.nvim'
 use 'rcarriga/nvim-notify'
 ```
@@ -56,7 +57,7 @@ require('lazy').setup({
     config = true,
     dependencies = {
       'nvim-telescope/telescope.nvim',
-      'numToStr/FTerm.nvim',
+      'akinsho/toggleterm.nvim',
       'rcarriga/nvim-notify',
     }
   }
@@ -67,24 +68,27 @@ require('lazy').setup({
 
 | Command | Description |
 | --- | --- |
-| `:ShowScriptsInTelescope` | Shows the available scripts in a telescope window |
-| `:RefreshPackageJsonCache` | Refreshes the package.json cache |
+| `:InstallPackage` | Installs a package in the current project |
 | `:OpenTerminal` | Opens one of the available terminals |
+| `:RefreshPackageJsonCache` | Refreshes the package.json cache |
+| `:ShowScriptsInTelescope` | Shows the available scripts in a telescope window |
 
 ## Api
 
 | Function | Description |
 | --- | --- |
+| `require('nvim-npm').exitAllTerminal()` | Closes all the terminals |
+| `require('nvim-npm').exitTerminal()` | Closes the current terminal |
+| `require('nvim-npm').installPackage()` | Installs a package in the current project |
 | `require('nvim-npm').openTerminal()` | Opens one of the available terminals |
 | `require('nvim-npm').showScripts()` | Shows the available scripts in a telescope window |
-| `require('nvim-npm').exitTerminal()` | Closes the current terminal |
-| `require('nvim-npm').exitAllTerminal()` | Closes all the terminals |
 
 
 ## Default Mappings
 
 | Mode | Key | Action |
 | --- | --- | --- |
+| Normal | `;pi` | Installs a package in the current project |
 | Normal | `;pl` | Lists the available scripts |
 | Normal | `;po` | Opens one of the available terminals |
 | Normal | `;pr` | Refreshes the package.json cache |
@@ -101,3 +105,8 @@ require('nvim-npm').setup({
     }
 })
 ```
+
+## Configuration options
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| mappings | table or false | default mappings | key mappings. set to false to disable default mappings |
