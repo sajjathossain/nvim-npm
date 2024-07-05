@@ -6,7 +6,7 @@ local M = {}
 
 M.exitAllTerminal = telescope._exitAllTerminals
 M.exitTerminal = telescope._exitTerminal
-M.InstallPackage = telescope._installPackage
+M.installPackage = telescope._installPackage
 M.openTerminal = telescope._openTerminal
 M.showScripts = telescope._showProjectsWithScriptsInTelescope
 
