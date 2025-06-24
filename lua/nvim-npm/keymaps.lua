@@ -1,63 +1,46 @@
+---@class Keymaps
 local M = {}
 
---- Set keymap
---- @type function
-M._keymap = vim.keymap.set
-
---- Keymaps
---- @type { t?: table<string, string>, n?: table<string, string> }
-M._keymaps = {
-  t = {
-    ["<esc><esc>"] = "<C-\\><C-n>",
-  },
-  n = {
-    [";pl"] = "<cmd>ShowScriptsInTelescope<cr>",
-    [";po"] = "<cmd>OpenTerminal<cr>",
-    [";pi"] = "<cmd>InstallPackage<cr>",
-    [";pr"] = "<cmd>RefreshPackageJsonCache<cr>",
-  }
-}
-
---- Init keymaps
---- @param opts { mappings?: false | { t?: table<string, string>, n?: table<string, string>  }  }
---- @return nil
-M._initKeymaps = function(opts)
-  if not opts or opts.mappings ~= false or (opts.mappings and #opts.mappings == 0) then
-    return M._setDeafultKeymaps()
-  end
-
-  if opts.mappings == false then
+---Setup keymaps based on configuration
+---@param mappings_config false | { t?: table<string, string>, n?: table<string, string> }
+function M.setup(mappings_config)
+  -- If mappings are disabled, return early
+  if mappings_config == false then
     return
   end
 
-  return M._setupMappings(opts.mappings)
-end
+  -- If no mappings config provided, don't set any keymaps
+  if not mappings_config or vim.tbl_isempty(mappings_config) then
+    return
+  end
 
-
---- set default keymaps
---- @return nil
-M._setDeafultKeymaps = function()
-  for mode, mappings in pairs(M._keymaps) do
-    for key, value in pairs(mappings) do
-      M._keymap(mode, key, value)
+  -- Set keymaps for each mode
+  for mode, mappings in pairs(mappings_config) do
+    if mappings and type(mappings) == "table" then
+      for key, command in pairs(mappings) do
+        vim.keymap.set(mode, key, command, {
+          desc = M.get_keymap_description(command),
+          silent = true,
+          noremap = true
+        })
+      end
     end
   end
 end
 
-
---- Setup keymaps
---- @param keymaps { t?: table<string, string>, n?: table<string, string> }
---- @return nil
-M._setupMappings = function(keymaps)
-  for mode, mappings in pairs(keymaps) do
-    if not mappings then
-      return
-    end
-
-    for key, value in pairs(mappings) do
-      M._keymap(mode, key, value)
-    end
-  end
+---Get description for keymap based on command
+---@param command string The command string
+---@return string Description
+function M.get_keymap_description(command)
+  local descriptions = {
+    ["<cmd>ShowScriptsInTelescope<cr>"] = "Show npm scripts",
+    ["<cmd>OpenTerminal<cr>"] = "Open terminal",
+    ["<cmd>InstallPackage<cr>"] = "Install package",
+    ["<cmd>RefreshPackageJsonCache<cr>"] = "Refresh cache",
+    ["<C-\\><C-n>"] = "Exit terminal mode"
+  }
+  
+  return descriptions[command] or "nvim-npm keymap"
 end
 
 return M
